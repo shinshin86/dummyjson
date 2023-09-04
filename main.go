@@ -3,24 +3,27 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"math"
 	"math/rand"
+	"os"
 	"time"
 )
 
 func main() {
-	jsonData := `{
-		"key1": "value1",
-		"key2": {
-			"nestedKey1": "nestedValue1",
-			"nestedKey2": 42,
-			"nestedKey3": true,
-			"nestedKey4": null
-		}
-	}`
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: go run main.go <path-to-json-file>")
+		return
+	}
+
+	filePath := os.Args[1]
+	jsonData, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		panic(err)
+	}
 
 	var data map[string]interface{}
-	err := json.Unmarshal([]byte(jsonData), &data)
+	err = json.Unmarshal(jsonData, &data)
 	if err != nil {
 		panic(err)
 	}
